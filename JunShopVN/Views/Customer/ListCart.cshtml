@@ -1,0 +1,179 @@
+﻿@model IEnumerable<JunShopVN.Models.Cart>
+@using JunShopVN.Models
+
+@{
+    Layout = null;
+}
+@Html.Raw(ViewBag.ErrorMessege)
+@{
+    decimal totalPrice = 0;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ListCart</title>
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="~/Content/small-business.css" rel="stylesheet">
+    <link href="~/Content/listcart.css" rel="stylesheet" />
+</head>
+<body>
+    @if (Session["username"] == null)
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Customer")"><img class="img-logo" src="~/Images/Asset-5.png" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="@Url.Action("Index", "Customer")">
+                                Trang chủ
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Login", "Login")">Đăng nhập</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+    else
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Customer")"><img class="img-logo" src="~/Images/Asset-5.png" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="@Url.Action("Index", "Customer")">
+                                Home
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            @{
+                                string username = Session["username"].ToString();
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <a class="nav-link" href="@Url.Action("viewProfile", "Login", new { id = db.Users.Where(y => y.accid == db.Accounts.Where(x => x.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().id })">Thông tin cá nhân</a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @{
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <a class="nav-link" href="@Url.Action("ListCart", "Customer", new { id = db.Users.Where(y => y.accid == db.Accounts.Where(x => x.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().id })">Xem giỏ hàng<span class="sr-only">(current)</span></a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @{
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <a class="nav-link" href="@Url.Action("ListOrder", "Customer", new { id = db.Users.Where(y => y.accid == db.Accounts.Where(x => x.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().id })">Xem đơn hàng</a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Logout", "Login")">Log Out</a>
+                        </li>
+                        <li class="nav-item">
+
+                            @{
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <span class="nav-link">Tài khoản còn dư: @String.Format("{0:n0}", db.Users.Where(x => x.accid == db.Accounts.Where(y => y.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().balance) VND</span>
+                                }
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+    <table class="table">
+        <tr>
+            <th>
+                <span>Tên gói nạp</span>
+            </th>
+            <th>
+                <span>Số lượng</span>
+            </th>
+            <th>
+                <span>Tổng giá(VND)</span>
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            totalPrice += item.totalprice;
+            <tr>
+                <td>
+                    @using (JShopVNEntities db = new JShopVNEntities())
+                    {
+                        <span>@db.Packages.Where(x => x.id == item.packid).FirstOrDefault().name</span>
+                    }
+
+                </td>
+                <td>
+                    @Html.ActionLink("-", "Decrease", new { id = item.id })&nbsp;&nbsp;&nbsp;@Html.DisplayFor(modelItem => item.quantity)&nbsp;&nbsp;&nbsp;@Html.ActionLink("+", "Increase", new { id = item.id })
+                </td>
+                <td>
+                    <span>@String.Format("{0:n0}", item.totalprice)</span>
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            </tr>
+        }
+
+    </table>
+    @using (JShopVNEntities db = new JShopVNEntities())
+    {
+        string username = Session["username"].ToString();
+        if (totalPrice > db.Users.Where(x => x.accid == db.Accounts.Where(y => y.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().balance)
+        {
+            <span class="badge badge-danger">Tổng giá trị đơn hàng vượt quá số dư trong tài khoản, vui lòng chuyển khoản cho Jun óc chó để thêm tiền vào tài khoản</span>
+        }
+    }
+
+    <div class="pricecon">
+        <span class="badge badge-info">Tổng giá trị đơn hàng: @String.Format("{0:n0}", totalPrice) VND</span>
+        @if (@Model.Count() != 0)
+        {
+            <a href="@Url.Action("Checkout", "Customer")" class="btn btn-success">Xác nhận đơn hàng</a>
+        }
+    </div>
+    <ul class="menu">
+        <li>Chủ Tài Khoản : <b>Lê Tường Vũ Huy</b></li>
+        <li>🏧 VCB: <b>0041000317793</b></li>
+        <li>🏧 Tech: <b>19032171817013</b></li>
+        <li>🏧 Viettin: <b>108871211475</b></li>
+        <li>🆗️ Ví MoMo: <b>0901170800</b></li>
+        <li>🆗️ Zalo Pay: <b>0901170800</b></li>
+        <li>🆗️ Viettel Pay: <b>0901170800</b></li>
+        <li>🆗️ AirPay: <b>0901170800</b></li>
+        <li>Hotline : <b>0901170800</b></li>
+        <li>
+            <a href="https://facebook.com/VnShopGame.VNGO/" target="_blank">
+                <i class="fa fa-facebook" style="font-size: 2em;"></i>acebook
+            </a>
+        </li>
+    </ul>
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="52254e7ada7b40cdba9ec3e7f5707ff0" Name="Diagram1">
+        <EntityTypeShape EntityType="JShopVNModel.Account" Width="1.5" PointX="10" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Cart" Width="1.5" PointX="7.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Country" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Game" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Note" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Order" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.OrderDetail" Width="1.5" PointX="7.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Package" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Publisher" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.Role" Width="1.5" PointX="7.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.sysdiagram" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="JShopVNModel.User" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <AssociationConnector Association="JShopVNModel.FK_Account_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="JShopVNModel.FK_Game_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="JShopVNModel.FK_Game_Publisher" ManuallyRouted="false" />
+        <AssociationConnector Association="JShopVNModel.FK_Package_Game" ManuallyRouted="false" />
+        <AssociationConnector Association="JShopVNModel.FK_Order_User" ManuallyRouted="false" />
+        <AssociationConnector Association="JShopVNModel.FK_OrderDetail_Order" ManuallyRouted="false" />
+        <AssociationConnector Association="JShopVNModel.FK_OrderDetail_Package" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

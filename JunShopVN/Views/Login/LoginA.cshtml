@@ -1,0 +1,73 @@
+﻿
+@model JunShopVN.Models.UserLoginModels
+@using JunShopVN.Models;
+@{
+    Layout = null;
+}
+@Html.Raw(ViewBag.ErrorMessege)
+@Html.Raw(TempData["msg"])
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/small-business.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Customer")"><img class="img-logo" src="~/Images/Asset-5.png" /></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="@Url.Action("Index", "Customer")">
+                            Trang chủ
+
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Register", "Login")">Đăng ký</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="account">
+            <h2 class="account-in">Đăng nhập tài khoản của bạn</h2>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div>
+                    <span class="mail">Tài khoản</span>
+                    @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "inputus" } })
+                    @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                </div>
+
+                <div>
+                    <span class="word">Mật khẩu</span>
+                    @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "inputus" }, type = "password" })
+                    @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                </div>
+                <div class="forget_pass">
+                    @Html.ActionLink("Đặt lại mật khẩu", "ResetPassword")
+                </div>
+                <div class="login_field">
+                    <input type="submit" value="Đăng nhập" class="login_button" />
+                </div>
+
+            }
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

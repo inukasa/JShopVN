@@ -1,0 +1,191 @@
+﻿@model IEnumerable<JunShopVN.Models.Game>
+@using JunShopVN.Models;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Trang chủ - Jun Shop</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700|Raleway:400,700&display=swap"
+          rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Vendor CSS Files -->
+    <link href="~/vendor/icofont/icofont.min.css" rel="stylesheet">
+    <link href="~/vendor/line-awesome/css/line-awesome.min.css" rel="stylesheet">
+    <link href="~/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/vendor/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="~/Content/style.css" rel="stylesheet">
+    <link href="~/Content/small-business.css" rel="stylesheet" />
+
+</head>
+<body>
+    @if (Session["username"] == null)
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Customer")"><img class="img-logo" src="~/Images/Asset-5.png" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="@Url.Action("Index", "Customer")">
+                                Trang chủ
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Login", "Login")">Đăng nhập</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+    else
+    {
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Customer")"><img class="img-logo" src="~/Images/Asset-5.png" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="@Url.Action("Index", "Customer")">
+                                Home
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            @{
+                                string username = Session["username"].ToString();
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <a class="nav-link" href="@Url.Action("viewProfile", "Login", new { id = db.Users.Where(y => y.accid == db.Accounts.Where(x => x.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().id })">Thông tin cá nhân</a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @{
+                                
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <a class="nav-link" href="@Url.Action("ListCart", "Customer", new { id = db.Users.Where(y => y.accid == db.Accounts.Where(x => x.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().id })">Xem giỏ hàng</a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @{
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <a class="nav-link" href="@Url.Action("ListOrder", "Customer", new { id = db.Users.Where(y => y.accid == db.Accounts.Where(x => x.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().id })">Xem đơn hàng</a>
+                                }
+                            }
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Logout", "Login")">Log Out</a>
+                        </li>
+                        <li class="nav-item">
+
+                            @{
+                                using (JShopVNEntities db = new JShopVNEntities())
+                                {
+                                    <span class="nav-link">Tk dư: @String.Format("{0:n0}", db.Users.Where(x => x.accid == db.Accounts.Where(y => y.username.Equals(username)).FirstOrDefault().id).FirstOrDefault().balance) VND</span>
+                                }
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    }
+
+    <main id="main">
+
+        <div class="site-section site-portfolio">
+            <div class="container">
+                <div class="row mb-5 align-items-center">
+                    <div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100">
+                        <div id="filters" class="filters">
+                            <a href="#" data-filter="*" class="active">Tất cả</a>
+                            <a href="#" data-filter=".vie">Việt Nam</a>
+                            <a href="#" data-filter=".other">Nước ngoài</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
+                    @foreach (var item in Model)
+                    {
+                        if (item.country == 1)
+                        {
+                            <div class="item vie col-sm-6 col-md-4 col-lg-4 mb-4">
+                                <a href="@Url.Action("PackageGame", "Customer", new { id = item.id})" class="item-wrap fancybox">
+                                    <div class="work-info">
+                                        <h3>@item.name</h3>
+                                        <span>Click để chọn gói nạp</span>
+                                    </div>
+                                    <img class="img-fluid" src="@Url.Content("~/Images/" + item.image)">
+                                </a>
+                            </div>
+                        }
+                        else if (item.country == 2)
+                        {
+                            <div class="item other col-sm-6 col-md-4 col-lg-4 mb-4">
+                                <a href="@Url.Action("PackageGame", "Customer", new { id = item.id})" class="item-wrap fancybox">
+                                    <div class="work-info">
+                                        <h3>@item.name</h3>
+                                        <span>Click để chọn gói nạp</span>
+                                    </div>
+                                    <img class="img-fluid" src="@Url.Content("~/Images/" + item.image)">
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    Designed by Xoài lắc
+                </div>
+            </div>
+            <div class="col-sm-6 social text-md-right">
+                <a href="#"><span class="icofont-facebook"></span></a>
+            </div>
+        </div>
+    </footer>
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/jquery/jquery-migrate.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/vendor/easing/easing.min.js"></script>
+    <script src="~/vendor/isotope/isotope.pkgd.min.js"></script>
+    <script src="~/vendor/aos/aos.js"></script>
+    <script src="~/vendor/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Template Main JS File -->
+    <script src="~/Scripts/main.js"></script>
+
+</body>
+</html>
+
+
